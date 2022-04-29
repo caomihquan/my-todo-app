@@ -10,4 +10,4 @@ const store = createStore(rootReducer);
 const root=createRoot(document.getElementById("root"));
 root.render(<Provider store={store}>
     <TodoApp />
-    </Provider>, document.getElementById('root'));
+    </Provider>);

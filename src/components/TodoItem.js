@@ -12,8 +12,8 @@ class TodoItem extends React.Component {
                 onChange={() => this.props.handleChange(id)}
                 /> 
                 <span className={completed ? "completed" : null}>
-                <input className="list" type="text" id={id} value={title} onChange={(e)=>{
-                this.props.setUpdate(e.target.value,id)}}/>
+                <p className="list" type="text" id={id}  onChange={(e)=>{
+                this.props.setUpdate(e.target.value,id)}}>{title}</p>
                 </span>
                 
                 <button className="btn-style"

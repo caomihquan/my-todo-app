@@ -1,34 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Header from '../components/layout/Header'
 import Todos from "./Todos"
 import AddTodo from "./AddToDo";
-import axios from "axios";
 import Footer from "../store/containers/Footer";
-
+import {v4} from "uuid";
 function TodoApp() {
-    const [state, setState] = useState({
-        todos: []
-        });
+    const storageJobs=JSON.parse(localStorage.getItem("jobs"))
+    const [state, setState] = useState(storageJobs??{todos:[]});
+
     const deleteTodo = id => {
-        axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`)
-            .then(response => setState({
+        
+        setState(()=>{
+            const newJobs={
                 todos: [
                     ...state.todos.filter(todo => {
                         return todo.id !== id;
                     })
                 ]
-            }))
-    }
-    const addTodo = title => {
-        const todoData = { title: title, completed: false }
-        axios.post("https://jsonplaceholder.typicode.com/todos", todoData)
-            .then(response => {
-                console.log(response.data)
-                setState({
-                    todos: [...state.todos, response.data]
-                })
-            })
+            }
+            const jsonJobs=JSON.stringify(newJobs);
+            localStorage.setItem('jobs',jsonJobs);
+            return  newJobs
+        })
     };
+
+    const addTodo = title => {
+        const todoData = {id:v4(),title: title, completed: false }
+        
+              setState(()=>{
+                 const newJobs={todos: [...state.todos,todoData]}
+
+                    const jsonJobs=JSON.stringify(newJobs);
+                    localStorage.setItem('jobs',jsonJobs);
+                return newJobs;
+    })
+}
 
     const handleCheckboxChange = id => {
         setState({
@@ -54,16 +60,6 @@ function TodoApp() {
             todos: items
         })
     };
-    useEffect(()=>{
-        const config ={
-            params:{
-                _limit:10
-            }
-        }
-
-        axios.get("https://jsonplaceholder.typicode.com/todos", config)
-            .then(response => setState({ todos: response.data }));
-    },[])
 
     return (
 
